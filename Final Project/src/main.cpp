@@ -41,6 +41,8 @@ Timer system:
 #include <Arduino.h>
 #include <avr/io.h>
 #include "timer.h"
+#include "motor.h"
+#include "lcd.h"
 
 
 //set of states that will be used in the state machine using enum
