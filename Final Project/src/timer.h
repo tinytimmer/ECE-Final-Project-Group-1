@@ -4,7 +4,11 @@
 
 #include <avr/io.h>
 
+void initTimer0();
+void delayMs(unsigned int delay);
 void initTimer1();
-void delayMs(unsigned int delay); 
+void delayUs(unsigned int delay);
+void initTimer3();
+void delayMin(unsigned int delay);
 
 #endif
