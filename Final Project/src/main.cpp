@@ -47,14 +47,32 @@ Timer system:
 #include "timer.h"
 #include "motor.h"
 #include "lcd.h"
+#include "Keypad.h"
 
 
 //set of states that will be used in the state machine using enum
 enum stateEnum {wait_press, debounce_press, wait_release, debounce_release};
 volatile stateEnum state = wait_press; //Initialize the state to waiting for button press
 
+/*  KEYPAD INITIALIZATION */
+const byte ROWS = 4;
+const byte COLS = 4; 
+char keys[ROWS][COLS] = { 
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
+//The pins on the arduino board to connect your keypad to. 
+//with the leftmost input, with the ribbon facing down and keypad up, being in pin 22. 
+byte rowPins[ROWS] = {22,23,24,25}; //connect to the row pinouts of the keypad
+byte colPins[COLS] = {26,27,28,29}; //connect to the column pinouts of the keypad
+Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+
 int main()
 {
+  init(); //initialization for the keypad. MUST BE AT THE BEGINNING OF MAIN!
+  
   Serial.begin(9600);
   sei(); // enable global interrupts
 
@@ -63,6 +81,11 @@ int main()
 
   while (1)
   {
+    //Simple Keypad reading
+    char key = kpd.getKey();
+    if (key) {
+      Serial.println(key);
+    }
 
     moveCursor(0, 5); // moves the cursor to 0,0 position
     writeString("Welcome!"); //write top line of LCD, we could also give this a funny name to display when it returns to this if we want to
