@@ -119,7 +119,7 @@ int main()
     setMotor(0, direction); */
 
 
-    //switch for button press
+/*     //switch for button press
     switch(state) {
       case wait_press:
         delayMs(1);
@@ -135,7 +135,7 @@ int main()
         delayMs(1);
         state = wait_press;
         break;
-    }
+    } */
 
     //use keypad to select size of dog and print to screen
 
