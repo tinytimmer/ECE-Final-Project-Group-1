@@ -72,7 +72,7 @@ Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 int main()
 {
-  init(); //initialization for the keypad. MUST BE AT THE BEGINNING OF MAIN!
+  //init(); //initialization for the keypad. MUST BE AT THE BEGINNING OF MAIN!
   
   Serial.begin(9600);
   sei(); // enable global interrupts
