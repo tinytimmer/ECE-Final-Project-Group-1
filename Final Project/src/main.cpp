@@ -44,6 +44,7 @@ Timer system:
 #include "motor.h"
 #include "lcd.h"
 #include "Keypad.h"
+#include "switch.h"
 
 
 //set of states that will be used in the state machine using enum
@@ -62,8 +63,8 @@ char keys[ROWS][COLS] = {
 };
 //The pins on the arduino board to connect your keypad to. 
 //with the leftmost input, with the ribbon facing down and keypad up, being in pin 22. 
-byte rowPins[ROWS] = {22,23,24,25}; //connect to the row pinouts of the keypad
-byte colPins[COLS] = {26,27,28,29}; //connect to the column pinouts of the keypad
+byte rowPins[ROWS] = {28,29,30,31}; //connect to the row pinouts of the keypad
+byte colPins[COLS] = {32,33,34,35}; //connect to the column pinouts of the keypad
 Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 
@@ -73,18 +74,24 @@ int main()
 
   Serial.begin(9600);
   sei(); // enable global interrupts
-
+  initLCD();
+  initSwitchPE0();
+  //initTimer0(); //LCD and keypad freak out when this is used, otherwise its functions correctly
   initTimer1();
 
   while (1)
   {
+    
+    moveCursor(0, 0); // moves the cursor to 0,5 position
+    writeString("Select Dog Size:");
+    moveCursor(1, 0); // moves the cursor to 0,0 position
+    writeString("1:S  2:M  3:L"); //write bottom line of LCD
+    
     char key = kpd.getKey();
-    if (key) {
-      Serial.println(key);
-    }
-
-
-
+      if (key) {
+        Serial.println(key);
+      }
+  
     //switch for button press
     switch(state) {
       case wait_press:
@@ -97,15 +104,20 @@ int main()
       case wait_release: 
       break;
       case debounce_release: //Add delay to account for debounce period
+      //Serial.println("button release");
         delayMs(1);
         state = wait_press;
         break;
     }
+
+    //use keypad to select size of dog and print to screen
+
   }
 }
 
 
-ISR(PCINT0_vect){
+ISR(INT0_vect){
+  //Serial.println("switch has been HIT");
   if (state == wait_press){
     state = debounce_press;
   }
