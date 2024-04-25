@@ -67,6 +67,11 @@ byte rowPins[ROWS] = {28,29,30,31}; //connect to the row pinouts of the keypad
 byte colPins[COLS] = {32,33,34,35}; //connect to the column pinouts of the keypad
 Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
+// Motor Setup
+  int speed = 128;  // speed of motor
+  bool direction = true;   // true = forward; false = backward
+
+
 
 int main()
 {
@@ -76,6 +81,7 @@ int main()
   sei(); // enable global interrupts
   initLCD();
   initSwitchPE0();
+  initMotor();
   //initTimer0(); //LCD and keypad freak out when this is used, otherwise its functions correctly
   initTimer1();
 
@@ -92,6 +98,27 @@ int main()
         Serial.println(key);
       }
   
+/*     //work with David to open and close door accroding to input, blocked for now to make sure keypad and lcd work together
+    setMotor(speed, direction);
+    // Time it takes for door to open
+    _delay_ms(2000);
+
+    // Stop motor
+    setMotor(0, direction);
+
+    // Time door remains open for food to pour into bowl
+    _delay_ms(5000);
+
+    // Close food door
+    //direction = false;
+    setMotor(speed, direction);
+    // Time it takes for door to close
+    _delay_ms(2000);
+
+    // Stop motor
+    setMotor(0, direction); */
+
+
     //switch for button press
     switch(state) {
       case wait_press:
