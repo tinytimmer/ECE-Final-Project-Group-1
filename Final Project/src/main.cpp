@@ -15,7 +15,6 @@
 */
 
 
-
 /* TODO: 
 
 LCD Display: 
@@ -38,8 +37,6 @@ Timer system:
     - Can be interrupted and reset. 
 
 
-
-
 */
 
 #include <Arduino.h>
@@ -48,11 +45,15 @@ Timer system:
 #include "motor.h"
 #include "lcd.h"
 #include "Keypad.h"
+//#include "Key.h"
 
 
 //set of states that will be used in the state machine using enum
-enum stateEnum {wait_press, debounce_press, wait_release, debounce_release};
-volatile stateEnum state = wait_press; //Initialize the state to waiting for button press
+enum stateButton {wait_press, debounce_press, wait_release, debounce_release};
+volatile stateButton state = wait_press; //Initialize the state to waiting for button press
+
+//enum stateDog {no_dog, small_dog, med_dog, large_dog};
+//volatile stateDog selection = no_dog;//initialize the state to nothing selected for dog size
 
 /*  KEYPAD INITIALIZATION */
 const byte ROWS = 4;
@@ -119,20 +120,74 @@ int main()
         break;
     }
 
+    //for selecting the type of dog size, should only accept one number
+    /* switch (key)
+    {
+    case 1:
+      //clear display
+      moveCursor(0,0);
+      writeString("                ");
+      moveCursor(1,0);
+      writeString("                ");
+      delayMs(1000);
+
+      //write to screen the selection made
+      moveCursor(0,0);
+      writeString("Small dog!");
+      break;
+    
+    case 2:
+      //clear display
+      moveCursor(0,0);
+      writeString("                ");
+      moveCursor(1,0);
+      writeString("                ");
+      delayMs(1000);
+
+      //write to screen the selection made
+      moveCursor(0,0);
+      writeString("Medium dog!");
+      break;
+
+    case 3:
+      //clear display
+      moveCursor(0,0);
+      writeString("                ");
+      moveCursor(1,0);
+      writeString("                ");
+      delayMs(1000);
+
+      //write to screen the selection made
+      moveCursor(0,0);
+      writeString("Large dog!");
+      break; 
+
+    default:
+      break;
+    } */
+
     //use this as a menu which should work with the motor in dispensing the food and the timer for how long it needs to dispense and when (if applicable)
-/*  switch(selection){
+    /* switch(selection){
             
       case 1: //small dog
+        //clear display
+        moveCursor(0,0);
+        writeString("                                           ");
+        moveCursor(1,0);
+        writeString("                                           ");
+        delayMs(1000);
 
+        //write small dog selected
 
       case 2: //medium dog
 
 
       case 3: //large dog
                 
-    } */ 
+    }  */ 
 
   }
+  return 0;
 }
 
 ISR(PCINT0_vect){

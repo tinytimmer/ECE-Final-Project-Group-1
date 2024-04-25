@@ -1,5 +1,4 @@
-
-#ifndef TIMMER_H
+#ifndef TIMER_H
 #define TIMER_H
 
 #include <avr/io.h>

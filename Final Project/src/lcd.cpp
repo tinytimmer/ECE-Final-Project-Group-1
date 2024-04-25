@@ -19,8 +19,8 @@ void initLCDPins(){
   // Enable B4 and B6 for the enable and RS pin, respectively. 
   DDRB|= ((1 << DDB6) | (1 << DDB4));
 
-  //A0-4 are the data pins on the LCD, with A0 being the least significant bit. 
-  DDRA |= ((1 << DDA0) | (1 << DDA1) | (1 << DDA2) | (1 << DDA3));
+  //B0-4 are the data pins on the LCD, with A0 being the least significant bit. 
+  DDRB |= ((1 << DDB0) | (1 << DDB1) | (1 << DDB2) | (1 << DDB3));
 }
 
 
