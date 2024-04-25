@@ -1,8 +1,8 @@
 // When you can see this in Github and can successfully edit it, please put your name and Net ID
-//  Author: Carmen Timmer, Enoch Dew, Cole Rogers, David Stefek
+//  Author: Carmen Timmer,
 //  Net ID: cvtimmer,
 //  Date: 4/8/2024
-//  Assignment:     Final Project
+//  Assignment:     Lab 5
 //  if there is a file missing for this lab go ahead and add it in
 //----------------------------------------------------------------------//
 
@@ -15,26 +15,25 @@
 */
 
 
+
 /* TODO: 
 
 LCD Display: 
     - Figure out communication protocol. Likely SPI. To communicate with the various devises. 
     - Accept input to display text to user. 
-
 Stepper Motor: 
     - Accept prompt to activate. 
     - Activation will have the motor turn a designated amount (amount can be specified, 
       but must be changeable for when physical model is ready.)
     - Can likely use the same system used in lab 4. 
-
-Input sensor. (ie 4x4 keypad)
-    - Accept input from the user to be used in the system. (menu driven selection)
-    - Accept override input form button at any time
-
+Input sensor. 
+    - Accept input from the user to be used in the system. 
 Timer system:
     - 
     - Keeps track of long periods (up to 24 hours?)
     - Can be interrupted and reset. 
+
+
 
 
 */
@@ -45,15 +44,12 @@ Timer system:
 #include "motor.h"
 #include "lcd.h"
 #include "Keypad.h"
-//#include "Key.h"
 
 
 //set of states that will be used in the state machine using enum
-enum stateButton {wait_press, debounce_press, wait_release, debounce_release};
-volatile stateButton state = wait_press; //Initialize the state to waiting for button press
+enum stateEnum {wait_press, debounce_press, wait_release, debounce_release};
+volatile stateEnum state = wait_press; //Initialize the state to waiting for button press
 
-//enum stateDog {no_dog, small_dog, med_dog, large_dog};
-//volatile stateDog selection = no_dog;//initialize the state to nothing selected for dog size
 
 /*  KEYPAD INITIALIZATION */
 const byte ROWS = 4;
@@ -70,40 +66,26 @@ byte rowPins[ROWS] = {22,23,24,25}; //connect to the row pinouts of the keypad
 byte colPins[COLS] = {26,27,28,29}; //connect to the column pinouts of the keypad
 Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
+
 int main()
 {
-  //init(); //initialization for the keypad. MUST BE AT THE BEGINNING OF MAIN!
-  
+  init(); //initialize the keypad. MUST BE AT THE BEGINNING OF MAIN!
+
   Serial.begin(9600);
   sei(); // enable global interrupts
 
-  // initialize stuff here
   initTimer1();
 
   while (1)
   {
-    //Simple Keypad reading
     char key = kpd.getKey();
     if (key) {
       Serial.println(key);
     }
 
-    moveCursor(0, 5); // moves the cursor to 0,0 position
-    writeString("Welcome!"); //write top line of LCD, we could also give this a funny name to display when it returns to this if we want to
-    delayMs(10000);
-    moveCursor(0, 0); // moves the cursor to 0,0 position
-    writeString("Select Dog Size:"); //write bottom line of LCD
-    moveCursor(0, 0); // moves the cursor to 0,0 position
-    delayMs(1500);
-    writeString("1: Small ");
-    moveCursor(0, 9); // moves the cursor to 0,9 position
-    writeString("2: Med "); 
-    moveCursor(1, 0); // moves the cursor to 1,0 position
-    writeString("3: Large ");
-    //after selecting, these options should go away, will be done in the switch case below
+
 
     //switch for button press
-    //we could use this to override the timing system and dispense the food when pressed, an idea that could make our project unique
     switch(state) {
       case wait_press:
         delayMs(1);
@@ -119,76 +101,9 @@ int main()
         state = wait_press;
         break;
     }
-
-    //for selecting the type of dog size, should only accept one number
-    /* switch (key)
-    {
-    case 1:
-      //clear display
-      moveCursor(0,0);
-      writeString("                ");
-      moveCursor(1,0);
-      writeString("                ");
-      delayMs(1000);
-
-      //write to screen the selection made
-      moveCursor(0,0);
-      writeString("Small dog!");
-      break;
-    
-    case 2:
-      //clear display
-      moveCursor(0,0);
-      writeString("                ");
-      moveCursor(1,0);
-      writeString("                ");
-      delayMs(1000);
-
-      //write to screen the selection made
-      moveCursor(0,0);
-      writeString("Medium dog!");
-      break;
-
-    case 3:
-      //clear display
-      moveCursor(0,0);
-      writeString("                ");
-      moveCursor(1,0);
-      writeString("                ");
-      delayMs(1000);
-
-      //write to screen the selection made
-      moveCursor(0,0);
-      writeString("Large dog!");
-      break; 
-
-    default:
-      break;
-    } */
-
-    //use this as a menu which should work with the motor in dispensing the food and the timer for how long it needs to dispense and when (if applicable)
-    /* switch(selection){
-            
-      case 1: //small dog
-        //clear display
-        moveCursor(0,0);
-        writeString("                                           ");
-        moveCursor(1,0);
-        writeString("                                           ");
-        delayMs(1000);
-
-        //write small dog selected
-
-      case 2: //medium dog
-
-
-      case 3: //large dog
-                
-    }  */ 
-
   }
-  return 0;
 }
+
 
 ISR(PCINT0_vect){
   if (state == wait_press){
