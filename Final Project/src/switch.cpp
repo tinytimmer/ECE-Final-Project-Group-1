@@ -1,9 +1,10 @@
 #include "switch.h"
 #include <avr/io.h>
 
+//I started this but I havent worked on finishing this, would appreacite yallsa help on this -CT
 
 /*
- * Initializes pull-up resistor on PD0 and sets it into input mode
+ * Initializes pull-up resistor on PE0 and sets it into input mode
  */
 void initSwitchPE0(){
 

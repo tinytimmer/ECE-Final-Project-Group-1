@@ -20,4 +20,7 @@ void setCGRAM(unsigned char x);
 void initLCDPins();
 void initLCDProcedure();
 
+//new: used to call the menu after selecting stuff and the operation is finished -CT
+void LCDmenu();
+
 #endif

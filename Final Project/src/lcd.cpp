@@ -12,14 +12,20 @@
 //THIS IS A COPY AND PASTE from lab 3!!!
 // CHANGES ARE NEEDED. 
 
+//very little changes were needed here, only think I added was the last function use to call the menu -CT
+
+
+
 /*
  * Initializes all pins related to the LCD to be outputs
  */
 void initLCDPins(){
   // Enable B4 and B6 for the enable and RS pin, respectively. 
+  // these are pins 12 and 10 on the Adrino board respectively -CT
   DDRB|= ((1 << DDB4) | (1 << DDB6));
 
   //A0-4 are the data pins on the LCD, with A0 being the least significant bit. 
+  //on the Adrino board the are pins are in order: 22, 23, 24, 25 -CT
   DDRA |= ((1 << DDA0) | (1 << DDA1) | (1 << DDA2) | (1 << DDA3));
 
   //finally initialized R/W
@@ -203,3 +209,11 @@ void initLCD(){
   initLCDPins();
   initLCDProcedure();
 }
+
+//new: menu setup to be used in LCD menu for this project
+  void LCDmenu(){
+    moveCursor(0, 0); // moves the cursor to 0,5 position
+    writeString("Select Dog Size:");
+    moveCursor(1, 0); // moves the cursor to 0,0 position
+    writeString("1:S  2:M  3:L"); //write bottom line of LCD 
+   }
