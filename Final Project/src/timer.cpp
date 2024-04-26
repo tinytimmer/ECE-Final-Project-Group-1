@@ -3,7 +3,7 @@
 #include <avr/io.h>
 
 
-/* Initialize timer 0, you should not turn the timer on here.
+/* Initialize timer 2, you should not turn the timer on here.
 * You will need to use CTC mode */
 void initTimer2(){
     // set the time register to CTC
