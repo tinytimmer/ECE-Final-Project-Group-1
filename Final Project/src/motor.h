@@ -7,7 +7,8 @@
 #include <avr/io.h>
 
 void initMotor();
-void setMotor(int speed, bool direction);
+void setMotor(bool direction);
+void stopMotor();
 
 
 #endif
