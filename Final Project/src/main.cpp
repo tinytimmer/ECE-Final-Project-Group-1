@@ -113,7 +113,11 @@ int main()
 
     //use keypad to select size of dog and print to screen
     char key = kpd.getKey();
+    if (key) {
+      if ((key == '1') | (key == '2') | (key == '3')) {
+          int chosenDelay = 0; //to be set based on selection of animal size. 
 
+          //LCD screen initialization
           moveCursor(0,0);
           writeString("                ");
           moveCursor(1,0);
@@ -182,7 +186,7 @@ int main()
         delayMs(1000);
         //doesnt go back to the menu (theoretically) -CT
 
-        break;
+        //break; break will break out of the while loop entirely because this isn't a switch case
       }
     }
     //work with David to open and close door accroding to input, blocked for now to make sure keypad and lcd work together, keeping this here in case something goes wrong with code above -CT
