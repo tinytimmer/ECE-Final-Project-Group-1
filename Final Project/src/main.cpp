@@ -201,8 +201,8 @@ writeString("1:S  2:M  3:L"); //write bottom line of LCD */
         // put the code for 8x8 LED matrix to display a smiley face once its done dispensing the food -CT
 
         // return to main menu
-        /* delayMs(1500);
-        LCDmenu(); */
+        delayMs(1500);
+        LCDmenu();
       }
       else if (key == '#')
       {
