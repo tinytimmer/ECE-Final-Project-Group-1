@@ -42,6 +42,7 @@ Timer system:
 #include "motor.h"
 #include "lcd.h"
 #include "Keypad.h"
+#include "spi.h"
 // #include "switch.h"
 
 // set of states that will be used in the state machine using enum
@@ -107,8 +108,11 @@ int main()
   initTimer1(); // initializes timer1. USdelay.
   initTimer2(); // initializes timer2. MSdelay.
   initTimer3(); // initializes timer3. delayMin.
+  SPI_MASTER_Init();// initializes SPI.
+  display_8x8();// initializes 8x8 LED matrix display.
 
   LCDmenu(); // opens the default LCD menu screen.
+  write_dogFace();
 
   while (1)
   {
@@ -136,6 +140,7 @@ writeString("1:S  2:M  3:L"); //write bottom line of LCD */
         if (key == '1')
         {
           // Write selection
+          write_smallDog();
           writeString("Small dog");
           moveCursor(1, 0);
           writeString("Waiting to drop");
@@ -146,6 +151,7 @@ writeString("1:S  2:M  3:L"); //write bottom line of LCD */
         else if (key == '2')
         {
           // Write selection
+          write_medDog();
           writeString("Medium dog");
           moveCursor(1, 0);
           writeString("Waiting to drop");
@@ -156,6 +162,7 @@ writeString("1:S  2:M  3:L"); //write bottom line of LCD */
         else if (key == '3')
         {
           // Write selection
+          write_bigDog();
           writeString("Large dog");
           moveCursor(1, 0);
           writeString("Waiting to drop");
@@ -198,11 +205,12 @@ writeString("1:S  2:M  3:L"); //write bottom line of LCD */
         moveCursor(0, 0);
         writeString("Food dispensed!");
 
-        // put the code for 8x8 LED matrix to display a smiley face once its done dispensing the food -CT
+        write_arrowFlashing(5); // display flashing arrow # of times argument indicates on 8x8 LED matrix
 
         // return to main menu
         delayMs(1500);
         LCDmenu();
+        write_dogFace();
       }
       else if (key == '#')
       {
