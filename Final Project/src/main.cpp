@@ -126,17 +126,17 @@ int main()
           direction = true;
           setMotor(speed, direction);
           // Time it takes for door to open
-          delayMs(2000);
+          delayMs(20000);
           // Stop motor
           setMotor(0, direction);
           // Time door remains open for food to pour into bowl, use the delay for minutes for the presentation, 1 minute to test it. This worked! -CT
           //_delay_ms(5000);
-          delayMin(1);
+          delayMs(1000);
           // Close food door
           direction = false;
           setMotor(speed, direction);
           // Time it takes for door to close
-          delayMs(2000);
+          delayMs(20000);
           // Stop motor
           setMotor(0, direction);
         
