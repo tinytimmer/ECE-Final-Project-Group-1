@@ -6,8 +6,8 @@
   /* Using the DC motor (the fan) and the H-bridge (aka L293D chip)
 
   Arduino Pin 8 goes to H-Bridge Pin 1.
-  Arduino Pin 7 goes to H-Bridge Pin 2.
-  Arduino Pin 6 goes to H-Bridge Pin 7.
+  Arduino Pin 6 goes to H-Bridge Pin 2.
+  Arduino Pin 5 goes to H-Bridge Pin 7.
   Arduino 5V goes to rail, then to H-Bridge Pin 8.
   Ground goes to H-Bridge Pin 4.
   And the 5V also goes to H-Bridge Pin 16.
@@ -15,19 +15,25 @@
 
     Changed it accoriding to my setup, I hope that is ok -CT
   */
-  byte enablePin = 8;
-  byte in1Pin = 7;
-  byte in2Pin = 6;
+const byte enablePin = 8;
+const byte in1Pin = 6;
+const byte in2Pin = 5;
+
+const int SPEED = 128;
 
 void initMotor() {  
-    // Pin Setup
-    pinMode(in1Pin, OUTPUT);
-    pinMode(in2Pin, OUTPUT);
-    pinMode(enablePin, OUTPUT);
+  // Pin Setup
+  pinMode(in1Pin, OUTPUT);
+  pinMode(in2Pin, OUTPUT);
+  pinMode(enablePin, OUTPUT);
 }
 
-void setMotor(int speed, bool direction) {
-    analogWrite(enablePin, speed);
-    digitalWrite(in1Pin, !direction);
-    digitalWrite(in2Pin, direction);
+void setMotor(bool direction) {
+  analogWrite(enablePin, SPEED);
+  digitalWrite(in1Pin, !direction);
+  digitalWrite(in2Pin, direction);
+}
+
+void stopMotor() {
+  analogWrite(enablePin, 0);
 }

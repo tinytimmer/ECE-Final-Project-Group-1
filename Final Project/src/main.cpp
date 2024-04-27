@@ -54,9 +54,7 @@ volatile stateEnum state = wait_press; //Initialize the state to waiting for but
 
 
 /*  KEYPAD INITIALIZATION */
-const byte ROWS = 4;
-const byte COLS = 4; 
-char keys[ROWS][COLS] = { 
+char keys[4][4] = { 
   {'1','2','3','A'},
   {'4','5','6','B'},
   {'7','8','9','C'},
@@ -65,13 +63,12 @@ char keys[ROWS][COLS] = {
 //The pins on the arduino board to connect your keypad to. 
 //with the leftmost input, with the ribbon facing down and keypad up, being in pin 28. Changed this cuz since LCD was in those ports on my end and this was eaier to change than the LCD stuff 
 // I hope that is ok -CT
-byte rowPins[ROWS] = {28,29,30,31}; //connect to the row pinouts of the keypad
-byte colPins[COLS] = {32,33,34,35}; //connect to the column pinouts of the keypad
-Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+byte rowPins[4] = {28,29,30,31}; //connect to the row pinouts of the keypad
+byte colPins[4] = {32,33,34,35}; //connect to the column pinouts of the keypad
+Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, 4, 4 );
 
 // Motor Setup
-  int speed = 128;  // speed of motor
-  bool direction = true;   // true = forward; false = backward
+enum direction { OPEN_DOOR = true, CLOSE_DOOR = false};
 
 //menu setup
 /* void LCDmenu(){
@@ -81,20 +78,30 @@ Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
   writeString("1:S  2:M  3:L"); //write bottom line of LCD 
 } */
 
+/* DEFINITIONS */
+//Delays to leave door open. 
+#define SMALL_DELAY 1
+#define MED_DELAY 1.5
+#define LARGE_DELAY 2
+
+//Delay to open/close door. 
+#define DOOR_DELAY 2000
+
 
 int main()
 {
   init(); //initialize the keypad. MUST BE AT THE BEGINNING OF MAIN!
-
   Serial.begin(9600);
-  sei(); // enable global interrupts
-  initLCD();
-  initSwitchPE0();
-  initMotor();
-  //initTimer0(); //LCD and keypad freak out when this is used, otherwise its functions correctly
-  initTimer1();
-  initTimer3();
-  LCDmenu();
+  sei();            // enable global interrupts
+
+  initLCD();        //initializes LCD screen. using pins 22, 23, 24, 25... 7, 10, 12
+  initSwitchPE0();  // TODO! IS THIS EVEN USED?
+  initMotor();      //initializes the motor, using pins 5, 6, and 8.
+  initTimer1();     // initializes timer1. USdelay. 
+  initTimer2();     // initializes timer2. MSdelay.
+  initTimer3();     // initializes timer3. delayMin. 
+
+  LCDmenu();        // opens the default LCD menu screen. 
   
 
   while (1)
@@ -106,136 +113,78 @@ int main()
 
     //use keypad to select size of dog and print to screen
     char key = kpd.getKey();
-      if (key) {
-        if(key == '1'){
-          Serial.println(key);
-          //LCD screen portion
+
           moveCursor(0,0);
           writeString("                ");
           moveCursor(1,0);
           writeString("                ");
           moveCursor(0,0);
-          writeString("Small dog");
 
-          //motor portion
-          //How this works is after selecting the dog size it goes through this motor portion dispense the food based on the time associated with the size
-          //  after this is done it goes back to the main menu letting the user select another dog size.
-          //  I didnt implement a scrict time for this like normal everyday dog feeders, but we def can include this if yall want to. 
-          //  Once its done dispensing the food it will make a smiley face on the 8x8 LED matrix for x amount of time before return to a neutral face and the main menu 
-          //  I hope this makes sense to yall. -CT
-          direction = true;
-          setMotor(speed, direction);
-          // Time it takes for door to open
-          delayMs(20000);
-          // Stop motor
-          setMotor(0, direction);
-          // Time door remains open for food to pour into bowl, use the delay for minutes for the presentation, 1 minute to test it. This worked! -CT
-          //_delay_ms(5000);
-          delayMs(1000);
-          // Close food door
-          direction = false;
-          setMotor(speed, direction);
-          // Time it takes for door to close
-          delayMs(2000);
-          // Stop motor
-          setMotor(0, direction);
-        
-          //put the code for 8x8 LED matrix to display a smiley face once its done dispensing the food -CT
+        if(key == '1') {
+            //Write selection
+            writeString("Small dog");
 
-          //return to main menu
-          delayMs(1000);
-          LCDmenu();
-        }
-        else if (key == '2')
-        {
-          Serial.println(key);
-          //LCD screen portion
-          moveCursor(0,0);
-          writeString("                ");
-          moveCursor(1,0);
-          writeString("                ");
-          moveCursor(0,0);
+            //chosen delay.
+            chosenDelay = SMALL_DELAY;
+        } else if (key == '2') {
+          //Write selection
           writeString("Medium dog");
 
-          //motor portion
-          direction = true;
-          setMotor(speed, direction);
-          // Time it takes for door to open
-          delayMs(2000);
-          // Stop motor
-          setMotor(0, direction);
-          // Time door remains open for food to pour into bowl, use the delay for minutes for the presentation, 1:30 minute to test it -CT
-          //_delay_ms(5000);
-          delayMin(1.5);
-          // Close food door
-          direction = false;
-          setMotor(speed, direction);
-          // Time it takes for door to close
-          delayMs(2000);
-          // Stop motor
-          setMotor(0, direction);
-        
-          //put the code for 8x8 LED matrix to display a smiley face once its done dispensing the food -CT
-          
-          //return to main menu
-          delayMs(1000);
-          LCDmenu();
-        }
-        else if (key == '3')
-        {
-          Serial.println(key);
-          //LCD screen portion
-          moveCursor(0,0);
-          writeString("                ");
-          moveCursor(1,0);
-          writeString("                ");
-          moveCursor(0,0);
+          //chosen delay.
+          chosenDelay = MED_DELAY;
+        } else if (key == '3') {
+          //Write selection
           writeString("Large dog");
 
-          //motor portion
-          direction = true;
-          setMotor(speed, direction);
-          // Time it takes for door to open
-          delayMs(2000);
-          // Stop motor
-          setMotor(0, direction);
-          // Time door remains open for food to pour into bowl, use the delay for minutes for the presentation, 2 minute to test it -CT
-          //_delay_ms(5000);
-          delayMin(2);
-          // Close food door
-          direction = false;
-          setMotor(speed, direction);
-          // Time it takes for door to close
-          delayMs(2000);
-          // Stop motor
-          setMotor(0, direction);
-        
-          //put the code for 8x8 LED matrix to display a smiley face once its done dispensing the food -CT
-          
-          //return to main menu
-          delayMs(1000);
-          LCDmenu();
+          //chosen delay.
+          chosenDelay = LARGE_DELAY;
         }
-        else if (key == '#')
-        {
-          Serial.println(key);
-          //LCD screen portion
-          moveCursor(0,0);
-          writeString("                ");
-          moveCursor(1,0);
-          writeString("                ");
-          moveCursor(0,0);
-          writeString("Thanks for");
-          moveCursor(1,0);
-          writeString("using this!");
-          delayMs(1000);
-          //doesnt go back to the menu (theoretically) -CT
 
-          break;
-        }
-        
+        //motor portion
+        //How this works is after selecting the dog size it goes through this motor portion dispense the food based on the time associated with the size
+        //  after this is done it goes back to the main menu letting the user select another dog size.
+        //  I didnt implement a scrict time for this like normal everyday dog feeders, but we def can include this if yall want to. 
+        //  Once its done dispensing the food it will make a smiley face on the 8x8 LED matrix for x amount of time before return to a neutral face and the main menu 
+        //  I hope this makes sense to yall. -CT
+        setMotor(OPEN_DOOR);
+        // Time it takes for door to open
+        delayMs(DOOR_DELAY);
+        // Stop motor
+        stopMotor();
+        // Time door remains open for food to pour into bowl, use the delay for minutes for the presentation, 1 minute to test it. This worked! -CT
+        //_delay_ms(5000);
+        delayMin(chosenDelay);
+        // Close food door
+        setMotor(CLOSE_DOOR);
+        // Time it takes for door to close
+        delayMs(DOOR_DELAY);
+        // Stop motor
+        stopMotor();
+      
+        //put the code for 8x8 LED matrix to display a smiley face once its done dispensing the food -CT
+
+        //return to main menu
+        delayMs(1000);
+        LCDmenu(); 
       }
-  
+      else if (key == '#')
+      {
+        Serial.println(key);
+        //LCD screen portion
+        moveCursor(0,0);
+        writeString("                ");
+        moveCursor(1,0);
+        writeString("                ");
+        moveCursor(0,0);
+        writeString("Thanks for");
+        moveCursor(1,0);
+        writeString("using this!");
+        delayMs(1000);
+        //doesnt go back to the menu (theoretically) -CT
+
+        break;
+      }
+    }
     //work with David to open and close door accroding to input, blocked for now to make sure keypad and lcd work together, keeping this here in case something goes wrong with code above -CT
 /*     direction = true;
     setMotor(speed, direction);
@@ -284,6 +233,7 @@ int main()
 
   }
 }
+
 
 
 ISR(INT0_vect){

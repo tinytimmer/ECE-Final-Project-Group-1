@@ -3,19 +3,19 @@
 #include <avr/io.h>
 
 
-/* Initialize timer 0, you should not turn the timer on here.
+/* Initialize timer 2, you should not turn the timer on here.
 * You will need to use CTC mode */
-void initTimer0(){
+void initTimer2(){
     // set the time register to CTC
-    TCCR0A &= ~(1 << WGM00);
-    TCCR0A |= (1 << WGM01);
-    TCCR0B &= ~(1 << WGM02);
+    TCCR2A &= ~(1 << WGM20);
+    TCCR2A |= (1 << WGM21);
+    TCCR2B &= ~(1 << WGM22);
     // set the prescaller to clk/64
-    TCCR0B |= (1 << CS00);
-    TCCR0B |= (1 << CS01);
-    TCCR0B &= ~(1 << CS02);
+    TCCR2B |= (1 << CS20);
+    TCCR2B |= (1 << CS21);
+    TCCR2B &= ~(1 << CS22);
     // CTC compare value
-    OCR0A = 250;
+    OCR2A = 250;
 }
 
 /* This delays the program an amount specified by unsigned int delay.
@@ -24,12 +24,12 @@ void initTimer0(){
 * 100-2000 milliseconds
 */
 void delayMs(unsigned int delay){
-    TCNT0 = 0; //start the timer at 0
-    TIFR0 |= (1 << OCF0A); // set compare flag to start timer
+    TCNT2 = 0; //start the timer at 0
+    TIFR2 |= (1 << OCF2A); // set compare flag to start timer
 
     for(unsigned int i = 0; i < delay; i++) {
-        while(!(TIFR0 & (1 << OCF0A))) {} // wait until timer is flagged
-        TIFR0 |= (1 << OCF0A); // restart timer
+        while(!(TIFR2 & (1 << OCF2A))) {} // wait until timer is flagged
+        TIFR2 |= (1 << OCF2A); // restart timer
     }
 }
 
