@@ -104,12 +104,12 @@ int main()
 
   initLCD(); // initializes LCD screen. using pins 22, 23, 24, 25... 7, 10, 12
   // initSwitchPE4(); // Will not be using this, use the pot to adjust the brightness of screen
-  initMotor();  // initializes the motor, using pins 5, 6, and 8.
-  initTimer1(); // initializes timer1. USdelay.
-  initTimer2(); // initializes timer2. MSdelay.
-  initTimer3(); // initializes timer3. delayMin.
-  SPI_MASTER_Init();// initializes SPI.
-  display_8x8();// initializes 8x8 LED matrix display.
+  initMotor();       // initializes the motor, using pins 5, 6, and 8.
+  initTimer1();      // initializes timer1. USdelay.
+  initTimer2();      // initializes timer2. MSdelay.
+  initTimer3();      // initializes timer3. delayMin.
+  SPI_MASTER_Init(); // initializes SPI.
+  display_8x8();     // initializes 8x8 LED matrix display.
 
   LCDmenu(); // opens the default LCD menu screen.
   write_dogFace();
@@ -126,7 +126,7 @@ writeString("1:S  2:M  3:L"); //write bottom line of LCD */
     char key = kpd.getKey();
     if (key)
     {
-      if ((key == '1') | (key == '2') | (key == '3') | (key == 'A') | (key == 'B'))
+      if ((key == '1') | (key == '2') | (key == '3'))
       {
         int chosenDelay = 0; // to be set based on selection of animal size.
 
