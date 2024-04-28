@@ -2,8 +2,8 @@
 #include <avr/io.h>
 #include "motor.h"
 
-/* code for stepper motor, WIP -CT
-
+// code for stepper motor, WIP -CT
+/*
 const int stepPin = 2;
 const int dirPin = 3;
 
@@ -40,7 +40,7 @@ const byte enablePin = 8;
 const byte in1Pin = 6;
 const byte in2Pin = 5;
 
-const int SPEED = 300;
+const int SPEED = 128;
 
 void initMotor()
 {

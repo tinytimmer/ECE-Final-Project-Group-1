@@ -94,7 +94,7 @@ enum direction
 #define DOOR_DELAY 2000
 
 // Delay to wait to dispense food, comes before the motor. This is in minutes
-#define DOOR_REPEAT 1
+#define DOOR_REPEAT 0.5
 
 int main()
 {
