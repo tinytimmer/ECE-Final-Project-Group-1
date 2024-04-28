@@ -100,19 +100,18 @@ int main()
 {
   init(); // initialize the keypad. MUST BE AT THE BEGINNING OF MAIN!
   Serial.begin(9600);
-  sei(); // enable global interrupts
-
-  initLCD(); // initializes LCD screen. using pins 22, 23, 24, 25... 7, 10, 12
-  // initSwitchPE4(); // Will not be using this, use the pot to adjust the brightness of screen
-  initMotor();       // initializes the motor, using pins 5, 6, and 8.
-  initTimer1();      // initializes timer1. USdelay.
-  initTimer2();      // initializes timer2. MSdelay.
-  initTimer3();      // initializes timer3. delayMin.
+  sei();             // enable global interrupts
   SPI_MASTER_Init(); // initializes SPI.
-  display_8x8();     // initializes 8x8 LED matrix display.
+  initLCD();         // initializes LCD screen. using pins 22, 23, 24, 25... 7, 10, 12
+  // initSwitchPE4(); // Will not be using this, use the pot to adjust the brightness of screen
+  initMotor();  // initializes the motor, using pins 5, 6, and 8.
+  initTimer1(); // initializes timer1. USdelay.
+  initTimer2(); // initializes timer2. MSdelay.
+  initTimer3(); // initializes timer3. delayMin.
 
-  LCDmenu(); // opens the default LCD menu screen.
+  display_8x8(); // initializes 8x8 LED matrix display.
   write_dogFace();
+  LCDmenu(); // opens the default LCD menu screen.
 
   while (1)
   {
@@ -197,6 +196,7 @@ writeString("1:S  2:M  3:L"); //write bottom line of LCD */
         stopMotor();
 
         // tell user food has been dispensed using both the screen and 8x8 LED matrix
+        write_arrowFlashing(5); // display flashing arrow # of times argument indicates on 8x8 LED matrix
         moveCursor(0, 0);
         writeString("                ");
         moveCursor(1, 0);
@@ -204,8 +204,6 @@ writeString("1:S  2:M  3:L"); //write bottom line of LCD */
         moveCursor(0, 0);
         moveCursor(0, 0);
         writeString("Food dispensed!");
-
-        write_arrowFlashing(5); // display flashing arrow # of times argument indicates on 8x8 LED matrix
 
         // return to main menu
         delayMs(1500);

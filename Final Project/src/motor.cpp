@@ -1,8 +1,29 @@
 #include <Arduino.h>
 #include <avr/io.h>
 #include "motor.h"
-// had to change the pins becuase these were occupied on my board for the LCD screen
-// from Davids note to me about the setup
+
+/* code for stepper motor, WIP -CT
+
+const int stepPin = 2;
+const int dirPin = 3;
+
+void initMotor()
+{
+  pinMode(stepPin, OUTPUT);
+  pinMode(dirPin, OUTPUT);
+}
+
+void setMotor(bool direction)
+{
+  digitalWrite(dirPin, direction);  // High to get it in the correct direction
+  digitalWrite(stepPin, direction); // High to start moving it
+  delay(3);
+  digitalWrite(stepPin, !direction);
+  delay(500);
+} */
+
+//  had to change the pins becuase these were occupied on my board for the LCD screen
+//  from Davids note to me about the setup
 /* Using the DC motor (the fan) and the H-bridge (aka L293D chip)
 
 Arduino Pin 8 goes to H-Bridge Pin 1.
@@ -19,7 +40,7 @@ const byte enablePin = 8;
 const byte in1Pin = 6;
 const byte in2Pin = 5;
 
-const int SPEED = 128;
+const int SPEED = 300;
 
 void initMotor()
 {
