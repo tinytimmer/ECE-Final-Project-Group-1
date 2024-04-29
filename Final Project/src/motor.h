@@ -7,8 +7,8 @@
 #include <avr/io.h>
 
 void initMotor();
-void setMotor(bool direction);
-void stopMotor();
-
+void activateServo();
+/* void setMotor(bool direction);
+void stopMotor(); */
 
 #endif

@@ -112,6 +112,7 @@ int main()
   display_8x8(); // initializes 8x8 LED matrix display.
   write_dogFace();
   LCDmenu(); // opens the default LCD menu screen.
+  activateServo();
 
   while (1)
   {
@@ -146,6 +147,7 @@ writeString("1:S  2:M  3:L"); //write bottom line of LCD */
 
           // chosen delay.
           chosenDelay = SMALL_DELAY;
+          activateServo();
         }
         else if (key == '2')
         {
@@ -176,24 +178,25 @@ writeString("1:S  2:M  3:L"); //write bottom line of LCD */
         //   I didnt implement a scrict time for this like normal everyday dog feeders, but we def can include this if yall want to.
         //   Once its done dispensing the food it will make a smiley face on the 8x8 LED matrix for x amount of time before return to a neutral face and the main menu
         //   I hope this makes sense to yall. -CT
-        delayMin(DOOR_REPEAT);
-        setMotor(OPEN_DOOR);
-        // Time it takes for door to open
-        delayMs(DOOR_DELAY);
+        // delayMin(DOOR_REPEAT);
+        // activateServo();
+        // setMotor(OPEN_DOOR);
+        //  Time it takes for door to open
+        // delayMs(DOOR_DELAY);
         // Stop motor
-        stopMotor();
+        // stopMotor();
 
         // Time door remains open for food to pour into bowl, use the delay for minutes for the presentation, 1 minute to test it. This worked! -CT
         //_delay_ms(5000);
-        delayMs(chosenDelay);
+        // delayMs(chosenDelay);
 
         // Close food door
-        setMotor(CLOSE_DOOR);
+        // setMotor(CLOSE_DOOR);
 
         // Time it takes for door to close
-        delayMs(DOOR_DELAY);
+        // delayMs(DOOR_DELAY);
         // Stop motor
-        stopMotor();
+        // stopMotor();
 
         // tell user food has been dispensed using both the screen and 8x8 LED matrix
         write_arrowFlashing(5); // display flashing arrow # of times argument indicates on 8x8 LED matrix

@@ -2,25 +2,32 @@
 #include <avr/io.h>
 #include "motor.h"
 
-// code for stepper motor, WIP -CT
-/*
-const int stepPin = 2;
-const int dirPin = 3;
+/* const byte inPin = 9;
+int servoAngle = 0; // default angle is 0 degrees */
 
 void initMotor()
 {
-  pinMode(stepPin, OUTPUT);
-  pinMode(dirPin, OUTPUT);
+  // pin setup
+  /* pinMode(inPin, OUTPUT);
+  pinMode(servoAngle, OUTPUT);
+  delay(1000); // wait for a second */
 }
 
-void setMotor(bool direction)
+void activateServo()
 {
-  digitalWrite(dirPin, direction);  // High to get it in the correct direction
-  digitalWrite(stepPin, direction); // High to start moving it
-  delay(3);
-  digitalWrite(stepPin, !direction);
-  delay(500);
-} */
+  // acts like the LCD screen you just need to call it in the main for each chose once
+  for (int i = 0; i <= 180; i++)
+  {
+    servoAngle = i; // should increase the angle to open the door
+    delay(15);      // delay for 15ms
+  }
+
+  for (int i = 180; i >= 0; i--)
+  {
+    servoAngle = i; // should decrease angle to close the door (rubberband or spring will help with this)
+    delay(15);      // delay 15ms
+  }
+}
 
 //  had to change the pins becuase these were occupied on my board for the LCD screen
 //  from Davids note to me about the setup
@@ -36,7 +43,7 @@ The motor goes to H-Bridge pins 3 and 6. Doesn't matter which. Flipping them jus
 
   Changed it accoriding to my setup, I hope that is ok -CT
 */
-const byte enablePin = 8;
+/* const byte enablePin = 8;
 const byte in1Pin = 6;
 const byte in2Pin = 5;
 
@@ -60,4 +67,4 @@ void setMotor(bool direction)
 void stopMotor()
 {
   analogWrite(enablePin, 0);
-}
+} */
