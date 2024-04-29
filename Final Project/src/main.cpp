@@ -104,7 +104,7 @@ int main()
           // Open food door
           openDoor();
           // Time door remains open for food to pour into bowl SMALL DOG
-          delayMs(1500);
+          delayMs(1750);
           // Close food door
           closeDoor();
           // tell user food has been dispensed using both the screen and 8x8 LED matrix
