@@ -43,18 +43,6 @@ Timer system:
 #include "lcd.h"
 #include "Keypad.h"
 #include "spi.h"
-// #include "switch.h"
-
-// set of states that will be used in the state machine using enum
-//  we will have to include a button for this that overrides the time to dispense
-/* enum stateEnum
-{
-  wait_press,
-  debounce_press,
-  wait_release,
-  debounce_release
-};
-volatile stateEnum state = wait_press; // Initialize the state to waiting for button press */
 
 /*  KEYPAD INITIALIZATION */
 char keys[4][4] = {
@@ -69,32 +57,7 @@ byte rowPins[4] = {28, 29, 30, 31}; // connect to the row pinouts of the keypad
 byte colPins[4] = {32, 33, 34, 35}; // connect to the column pinouts of the keypad
 Keypad kpd = Keypad(makeKeymap(keys), rowPins, colPins, 4, 4);
 
-// Motor Setup
-enum direction
-{
-  OPEN_DOOR = true,
-  CLOSE_DOOR = false
-};
-
-// menu setup
-/* void LCDmenu(){
-  moveCursor(0, 0); // moves the cursor to 0,5 position
-  writeString("Select Dog Size:");
-  moveCursor(1, 0); // moves the cursor to 0,0 position
-  writeString("1:S  2:M  3:L"); //write bottom line of LCD
-} */
-
-/* DEFINITIONS */
-// Delays to leave door open, should only open for a short time before closing again
-#define SMALL_DELAY 0.25
-#define MED_DELAY 0.50
-#define LARGE_DELAY 0.75
-
-// Delay to open/close door
-#define DOOR_DELAY 2000
-
-// Delay to wait to dispense food, comes before the motor. This is in minutes
-#define DOOR_REPEAT 0.5
+// Motor Setup w/ LCD and 8x8, needed to have the <Servo.h> library to work
 
 int main()
 {
@@ -112,24 +75,16 @@ int main()
   display_8x8(); // initializes 8x8 LED matrix display.
   write_dogFace();
   LCDmenu(); // opens the default LCD menu screen.
-  activateServo();
 
   while (1)
   {
-
-    /* moveCursor(0, 0); // moves the cursor to 0,5 position
-writeString("Select Dog Size:");
-moveCursor(1, 0); // moves the cursor to 0,0 position
-writeString("1:S  2:M  3:L"); //write bottom line of LCD */
 
     // use keypad to select size of dog and print to screen
     char key = kpd.getKey();
     if (key)
     {
-      if ((key == '1') | (key == '2') | (key == '3'))
+      if ((key == '1') | (key == '2') | (key == '3') | (key == 'A') | (key == 'B') | (key == 'C'))
       {
-        int chosenDelay = 0; // to be set based on selection of animal size.
-
         // LCD screen initialization
         moveCursor(0, 0);
         writeString("                ");
@@ -140,79 +95,99 @@ writeString("1:S  2:M  3:L"); //write bottom line of LCD */
         if (key == '1')
         {
           // Write selection
-          write_smallDog();
-          writeString("Small dog");
+          write_smallDog(); // draw small dog on 8x8 matrix
+          moveCursor(0, 0);
+          writeString("Small dog"); // write this on LCD screen
           moveCursor(1, 0);
           writeString("Waiting to drop");
+          delayMin(1); // one minute delay
+          // Open food door
+          openDoor();
+          // Time door remains open for food to pour into bowl SMALL DOG
+          delayMs(1500);
+          // Close food door
+          closeDoor();
+          // tell user food has been dispensed using both the screen and 8x8 LED matrix
+          write_arrowFlashing(5); // display flashing arrow # of times argument indicates on 8x8 LED matrix
+          moveCursor(0, 0);
+          writeString("                ");
+          moveCursor(1, 0);
+          writeString("                ");
+          moveCursor(0, 0);
+          moveCursor(0, 0);
+          writeString("Food dispensed!");
 
-          // chosen delay.
-          chosenDelay = SMALL_DELAY;
-          activateServo();
+          // return to main menu
+          delayMs(1500);
+          LCDmenu();
+          write_dogFace();
         }
         else if (key == '2')
         {
           // Write selection
           write_medDog();
-          writeString("Medium dog");
+          writeString("Medium dog"); // write this on LCD screen
           moveCursor(1, 0);
           writeString("Waiting to drop");
+          delayMin(1); // one minute delay
+          // Open food door
+          openDoor();
+          // Time door remains open for food to pour into bowl SMALL DOG
+          delayMs(1750);
+          // Close food door
+          closeDoor();
+          // tell user food has been dispensed using both the screen and 8x8 LED matrix
+          write_arrowFlashing(5); // display flashing arrow # of times argument indicates on 8x8 LED matrix
+          moveCursor(0, 0);
+          writeString("                ");
+          moveCursor(1, 0);
+          writeString("                ");
+          moveCursor(0, 0);
+          moveCursor(0, 0);
+          writeString("Food dispensed!");
 
-          // chosen delay.
-          chosenDelay = MED_DELAY;
+          // return to main menu
+          delayMs(1500);
+          LCDmenu();
+          write_dogFace();
         }
         else if (key == '3')
         {
           // Write selection
           write_bigDog();
-          writeString("Large dog");
+          writeString("Large dog"); // write this on LCD screen
           moveCursor(1, 0);
           writeString("Waiting to drop");
+          delayMin(1); // one minute delay by default, can change this later if we figure out how to adjust this from the menu
+          // Open food door
+          openDoor();
+          // Time door remains open for food to pour into bowl SMALL DOG
+          delayMs(2000);
+          // Close food door
+          closeDoor();
+          // tell user food has been dispensed using both the screen and 8x8 LED matrix
+          write_arrowFlashing(5); // display flashing arrow # of times argument indicates on 8x8 LED matrix
+          moveCursor(0, 0);
+          writeString("                ");
+          moveCursor(1, 0);
+          writeString("                ");
+          moveCursor(0, 0);
+          moveCursor(0, 0);
+          writeString("Food dispensed!");
 
-          // chosen delay.
-          chosenDelay = LARGE_DELAY;
+          // return to main menu
+          delayMs(1500);
+          LCDmenu();
+          write_dogFace();
         }
-
-        // motor portion
-        // How this works is after selecting the dog size it goes through this motor portion dispense the food based on the time associated with the size
-        //   after this is done it goes back to the main menu letting the user select another dog size.
-        //   I didnt implement a scrict time for this like normal everyday dog feeders, but we def can include this if yall want to.
-        //   Once its done dispensing the food it will make a smiley face on the 8x8 LED matrix for x amount of time before return to a neutral face and the main menu
-        //   I hope this makes sense to yall. -CT
-        // delayMin(DOOR_REPEAT);
-        // activateServo();
-        // setMotor(OPEN_DOOR);
-        //  Time it takes for door to open
-        // delayMs(DOOR_DELAY);
-        // Stop motor
-        // stopMotor();
-
-        // Time door remains open for food to pour into bowl, use the delay for minutes for the presentation, 1 minute to test it. This worked! -CT
-        //_delay_ms(5000);
-        // delayMs(chosenDelay);
-
-        // Close food door
-        // setMotor(CLOSE_DOOR);
-
-        // Time it takes for door to close
-        // delayMs(DOOR_DELAY);
-        // Stop motor
-        // stopMotor();
-
-        // tell user food has been dispensed using both the screen and 8x8 LED matrix
-        write_arrowFlashing(5); // display flashing arrow # of times argument indicates on 8x8 LED matrix
-        moveCursor(0, 0);
-        writeString("                ");
-        moveCursor(1, 0);
-        writeString("                ");
-        moveCursor(0, 0);
-        moveCursor(0, 0);
-        writeString("Food dispensed!");
-
-        // return to main menu
+      }
+      /*//this didnt work, it did register me pushing 'A' but it didnt return to the main menu
+      else if (key == 'A')
+      { // return to main menu
         delayMs(1500);
         LCDmenu();
         write_dogFace();
-      }
+      }*/
       else if (key == '#')
       {
         Serial.println(key);
@@ -226,65 +201,51 @@ writeString("1:S  2:M  3:L"); //write bottom line of LCD */
         moveCursor(1, 0);
         writeString("this device!");
         delayMs(1000);
-        // does go back to the menu (theoretically) -CT
+        // finish using the device, doesnt go back to the menu UNLESS you press the rest button on the MCU
 
         // break; break will break out of the while loop entirely because this isn't a switch case
       }
     }
-    // work with David to open and close door accroding to input, blocked for now to make sure keypad and lcd work together, keeping this here in case something goes wrong with code above -CT
-    /*     direction = true;
-        setMotor(speed, direction);
-        // Time it takes for door to open
-        _delay_ms(2000);
-
-        // Stop motor
-        setMotor(0, direction);
-
-        // Time door remains open for food to pour into bowl
-        _delay_ms(5000);
-
-        // Close food door
-        direction = false;
-        setMotor(speed, direction);
-        // Time it takes for door to close
-        _delay_ms(2000);
-
-        // Stop motor
-        setMotor(0, direction);
-
-
-        */
-
-    /*     //scarpping this idea since the above works for now -CT
-        //switch for button press
-        switch(state) {
-          case wait_press:
-            delayMs(1);
-            break;
-          case debounce_press:
-            delayMs(1); //Adds delay to account for debounce period
-            state = wait_release;
-            break;
-          case wait_release:
-          break;
-          case debounce_release: //Add delay to account for debounce period
-          //Serial.println("button release");
-            delayMs(1);
-            state = wait_press;
-            break;
-        } */
   }
 }
-
-/* ISR(INT0_vect)
-{
-  // Serial.println("switch has been HIT");
-  if (state == wait_press)
-  {
-    state = debounce_press;
-  }
-  else if (state == wait_release)
-  {
-    state = debounce_release;
-  }
-} */
+/* tried to see if i could add this to give users a chace to select a time, didnt work
+char key = kpd.getKey();
+          if (key)
+          {
+            if ((key == 'A') | (key == 'B') | (key == 'C'))
+            {
+              if (key == 'A')
+              {
+                // SMALL DOG
+                moveCursor(0, 0);
+                writeString("1min selected");
+                delayMin(0.5); // one minute delay
+                // Open food door
+                openDoor();
+                // Time door remains open for food to pour into bowl SMALL DOG
+                delayMs(1500);
+                // Close food door
+                closeDoor();
+              }
+              else if (key == 'B')
+              {
+                delayMin(0.5); // five minute delay
+                // Open food door
+                openDoor();
+                // Time door remains open for food to pour into bowl SMALL DOG
+                delayMs(1500);
+                // Close food door
+                closeDoor();
+              }
+              else if (key == 'C')
+              {
+                delayMin(0.5); // ten minute delay
+                // Open food door
+                openDoor();
+                // Time door remains open for food to pour into bowl SMALL DOG
+                delayMs(1500);
+                // Close food door
+                closeDoor();
+              }
+            }
+          } */
