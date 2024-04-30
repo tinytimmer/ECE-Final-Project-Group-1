@@ -100,7 +100,7 @@ int main()
           writeString("Small dog"); // write this on LCD screen
           moveCursor(1, 0);
           writeString("Waiting to drop");
-          delayMin(0.5); // one minute delay
+          delayMin(1); // one minute delay
           // Open food door
           openDoor();
           // Time door remains open for food to pour into bowl SMALL DOG
@@ -129,7 +129,7 @@ int main()
           writeString("Medium dog"); // write this on LCD screen
           moveCursor(1, 0);
           writeString("Waiting to drop");
-          delayMin(0.5); // one minute delay
+          delayMin(1); // one minute delay
           // Open food door
           openDoor();
           // Time door remains open for food to pour into bowl MED DOG
@@ -159,7 +159,7 @@ int main()
           writeString("Large dog"); // write this on LCD screen
           moveCursor(1, 0);
           writeString("Waiting to drop");
-          delayMin(0.5); // one minute delay by default, can change this later if we figure out how to adjust this from the menu
+          delayMin(1); // one minute delay by default, can change this later if we figure out how to adjust this from the menu
           // Open food door
           openDoor();
           // Time door remains open for food to pour into bowl LARGE DOG
