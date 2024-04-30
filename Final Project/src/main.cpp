@@ -100,22 +100,22 @@ int main()
           writeString("Small dog"); // write this on LCD screen
           moveCursor(1, 0);
           writeString("Waiting to drop");
-          delayMin(1); // one minute delay
+          delayMin(0.5); // one minute delay
           // Open food door
           openDoor();
           // Time door remains open for food to pour into bowl SMALL DOG
-          delayMs(1750);
+          // delayMin(1);
+          delayUs(1000000); // 1 sec in microseconds
           // Close food door
           closeDoor();
           // tell user food has been dispensed using both the screen and 8x8 LED matrix
           write_arrowFlashing(5); // display flashing arrow # of times argument indicates on 8x8 LED matrix
-          moveCursor(0, 0);
-          writeString("                ");
-          moveCursor(1, 0);
-          writeString("                ");
-          moveCursor(0, 0);
+          /* moveCursor(0, 0);
+          writeString("                ");*/
           moveCursor(0, 0);
           writeString("Food dispensed!");
+          moveCursor(1, 0);
+          writeString("                ");
 
           // return to main menu
           delayMs(1500);
@@ -129,11 +129,12 @@ int main()
           writeString("Medium dog"); // write this on LCD screen
           moveCursor(1, 0);
           writeString("Waiting to drop");
-          delayMin(1); // one minute delay
+          delayMin(0.5); // one minute delay
           // Open food door
           openDoor();
-          // Time door remains open for food to pour into bowl SMALL DOG
-          delayMs(1750);
+          // Time door remains open for food to pour into bowl MED DOG
+          // delayMin(1);
+          delayUs(2000000); // 2 sec in microseconds
           // Close food door
           closeDoor();
           // tell user food has been dispensed using both the screen and 8x8 LED matrix
@@ -158,11 +159,12 @@ int main()
           writeString("Large dog"); // write this on LCD screen
           moveCursor(1, 0);
           writeString("Waiting to drop");
-          delayMin(1); // one minute delay by default, can change this later if we figure out how to adjust this from the menu
+          delayMin(0.5); // one minute delay by default, can change this later if we figure out how to adjust this from the menu
           // Open food door
           openDoor();
-          // Time door remains open for food to pour into bowl SMALL DOG
-          delayMs(2000);
+          // Time door remains open for food to pour into bowl LARGE DOG
+          // delayMin(1.5);
+          delayUs(3800000); // 3.8 sec in microseconds
           // Close food door
           closeDoor();
           // tell user food has been dispensed using both the screen and 8x8 LED matrix
